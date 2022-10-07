@@ -18,7 +18,7 @@ Analysis of Skin Lesion Dermoscopic Images to segment out, and subtype lesions u
   - Balanced    
     - `training_balanced`: 61875 images
 
-2. CGAN model
+2. Conditional GAN Model
 
    - Preprocess
      - `Segmentation/train/ISIC2018_Task1-2_Training_Input(input)`: 2594 images
@@ -30,16 +30,19 @@ Analysis of Skin Lesion Dermoscopic Images to segment out, and subtype lesions u
    - Test           
      - `\GAN\test\images`: 11720 images
 
-3. Segmentation -- BCDU-Net
+3. Segmentation using BCD UNet
 
-   8. Training images --- \Segmentation\Data                 --- 14314 images 
-      Validat  images --- \Segmentation\Data                 --- 100 images
-      Test            --- \Classification\training/Processed --- 25331 images
+   - Training Images
+     - `\Segmentation`: 14314 images 
+   - Validation Images 
+     - `\Segmentation\Data`: 100 images
+   - Test            
+     - `\Classification\training/Processed`: 25331 images
 
 4. Segmented Classification
 
-   9. Unbalanced --- Segmented_train_120epochs --- 25331 images
-   10. re-weights --- Segmented_train_120epochs --- 25331 images
-   11. smote      --- Segmented_train_120epochs(train) --- 25331 images
+   - Unbalanced --- Segmented_train_120epochs --- 25331 images
+   - Re-weights --- Segmented_train_120epochs --- 25331 images
+   - SMOTE     --- Segmented_train_120epochs(train) --- 25331 images
                  --- segmented_smote(resampled) --- 61875 images
-   12. balanced   --- segmented_smote           --- 61875 images  
+   - Balanced  --- segmented_smote           --- 61875 images  

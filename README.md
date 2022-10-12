@@ -41,8 +41,12 @@ Analysis of Skin Lesion Dermoscopic Images to segment out lesion regions, and cl
 
 4. Segmented Classification
 
-   - Unbalanced --- Segmented_train_120epochs --- 25331 images
-   - Re-weights --- Segmented_train_120epochs --- 25331 images
-   - SMOTE     --- Segmented_train_120epochs(train) --- 25331 images
-                 --- segmented_smote(resampled) --- 61875 images
-   - Balanced  --- segmented_smote           --- 61875 images  
+   - Unbalanced
+    - `Segmented_train_120epochs`: 25331 images
+   - Re-weights
+    - `Segmented_train_120epochs`: 25331 images
+   - SMOTE 
+    - `Segmented_train_120epochs(train)`: 25331 images
+    - `segmented_smote(resampled)`: 61875 images
+   - Balanced  
+    - `segmented_smote`: 61875 images  

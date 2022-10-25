@@ -1,6 +1,6 @@
 # Skin-Lesion-Analysis
 
-Analysis of Skin Lesion Dermoscopic Images to segment out lesion regions, and classify the lesion type using Deep Learning.
+Analysis of Skin Lesion Images to segment out lesion regions, and classify the lesion type using Deep Learning.
 
 ## Data Directory
 

@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense,Flatten
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.applications import EfficientNetB2
+from tensorflow.keras.applications import EfficientNetB6
 
 # import pathlib
 # root_path = "/content/gdrive/MyDrive/ISIC_DATASETS/ISIC_Datasets/Classification/Segmented_train_120epochs"

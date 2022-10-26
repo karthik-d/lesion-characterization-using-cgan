@@ -83,46 +83,37 @@ def experiment_effnetb6(data_path):
 	# 	name="img_augmentation",
 	# )
 
-	inputs = layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
-	# x = img_augmentation(inputs)  
-	effb6_model = EfficientNetB6(include_top=False, input_shape=(IMG_HEIGHT, IMG_WIDTH, 3), weights="imagenet")
-	# Freeze the pretrained weights
-	effb6_model.trainable = False
+	model = EfficientNetB6(
+        include_top=False,
+        weights='imagenet',
+        input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+    )
+	# model.summary(line_length=150)
 
-	x = effb6_model(inputs)
-	# take a tensor and compute the average value of all values across the entire matrix for each of the input channels.
-	x = layers.GlobalAveragePooling2D(name="avg_pool")(x)
-	x = layers.BatchNormalization()(x)
+	flatten = Flatten()
+	dropout = layers.Dropout(0.2, name="top_dropout")
+	new_layer2 = layers.Dense(8, activation='softmax', name='my_dense_2')
 
-	top_dropout_rate = 0.2
-	x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
-	outputs = layers.Dense(8, activation="softmax", name="prediction")(x)
+	inp2 = model.input
+	out2 = new_layer2(dropout(flatten(model.output)))
 
-	# Compile
-	model = tf.keras.Model(inputs, outputs, name="EfficientNetB6")
-	optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
-	model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+	opt = tf.keras.optimizers.Adam(learning_rate=1e-02)
+	model2 = tf.keras.Model(inp2, out2)
+	model.compile(optimizer=opt, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 	# print(model.summary())
-
-	
-
-	print(tfds.as_numpy(data_builder.as_dataset(
-			split='train',
-			shuffle_files=True
-		))
-		)
 
 	# REFINE
 	hist = model.fit(
-		tfds.as_numpy(data_builder.as_dataset(
+		data_builder.as_dataset(
 			split='train',
-			shuffle_files=True
-		)), 
+			shuffle_files=True,
+			batch_size=BATCH_SIZE
+		), 
 		epochs=EPOCHS_REFINE, 
-		validation_data = tfds.as_numpy(data_builder.as_dataset(
+		validation_data = data_builder.as_dataset(
 			split='validation',
 			shuffle_files=False
-		))
+		)
 	)
 
 	# TRAIN

@@ -5,12 +5,15 @@ import os
 from pathlib import Path
 
 import tensorflow as tf
+import tensorflow_datasets as tfds
 from tensorflow.keras.layers import Dense,Flatten
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from keras.models import load_model
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
 
-from efficientnet.efficientnet.model import EfficientNetB6
+from .efficientnet.efficientnet.model import EfficientNetB6
 
 # import pathlib
 # root_path = "/content/gdrive/MyDrive/ISIC_DATASETS/ISIC_Datasets/Classification/Segmented_train_120epochs"
@@ -39,23 +42,30 @@ def experiment_effnetb6(data_path):
 
 	"""**Splitting the data into training and validation**"""
 
-	train_ds = tf.keras.preprocessing.image_dataset_from_directory(
+	data_builder = tfds.folder_dataset.ImageFolder(
 		data_path,
-		validation_split=0.2,
-		subset="training",
-		seed=123,
-		image_size=(IMG_HEIGHT, IMG_WIDTH),
-		batch_size = BATCH_SIZE 
+		shape=(IMG_HEIGHT, IMG_WIDTH, 3)
 	)
 
-	val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-		data_path,
-		validation_split=0.2,
-		subset="validation",
-		seed=123,
-		image_size=(IMG_HEIGHT, IMG_WIDTH),
-		batch_size =BATCH_SIZE 
-	)
+	# print(train_ds)
+
+	# train_ds = tf.keras.utils.image_dataset_from_directory(
+	# 	data_path,
+	# 	validation_split=0.2,
+	# 	subset="training",
+	# 	seed=123,
+	# 	image_size=(IMG_HEIGHT, IMG_WIDTH),
+	# 	batch_size = BATCH_SIZE 
+	# )
+
+	# val_ds = tf.keras.preprocessing.image_dataset_from_directory(
+	# 	data_path,
+	# 	validation_split=0.2,
+	# 	subset="validation",
+	# 	seed=123,
+	# 	image_size=(IMG_HEIGHT, IMG_WIDTH),
+	# 	batch_size =BATCH_SIZE 
+	# )
 
 
 	"""**Training the model**"""
@@ -63,19 +73,19 @@ def experiment_effnetb6(data_path):
 	from tensorflow.keras.models import Sequential
 	from tensorflow.keras import layers
 
-	img_augmentation = Sequential(
-		[
-			layers.RandomRotation(factor=0.15),
-			layers.RandomTranslation(height_factor=0.1, width_factor=0.1),
-			layers.RandomFlip(),
-			layers.RandomContrast(factor=0.1),
-		],
-		name="img_augmentation",
-	)
+	# img_augmentation = Sequential(
+	# 	[
+	# 		layers.experimental.preprocessing.RandomRotation(factor=0.15),
+	# 		layers.experimental.preprocessing.RandomTranslation(height_factor=0.1, width_factor=0.1),
+	# 		layers.experimental.preprocessing.RandomFlip(),
+	# 		layers.experimental.preprocessing.RandomContrast(factor=0.1),
+	# 	],
+	# 	name="img_augmentation",
+	# )
 
 	inputs = layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
-	x = img_augmentation(inputs)  
-	model = EfficientNetB2(include_top=False, input_tensor=x, weights="imagenet")
+	# x = img_augmentation(inputs)  
+	model = EfficientNetB6(include_top=False, input_tensor=inputs, weights="imagenet")
 
 	# Freeze the pretrained weights
 	model.trainable = False
@@ -94,7 +104,17 @@ def experiment_effnetb6(data_path):
 	model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 
 	# REFINE
-	hist = model.fit(train_ds, epochs=EPOCHS_REFINE, validation_data=val_ds)
+	hist = model.fit(
+		data_builder.as_dataset(
+			split='train',
+			shuffle_files=True
+		), 
+		epochs=EPOCHS_REFINE, 
+		validation_data = data_builder.as_dataset(
+			split='validation',
+			shuffle_files=False
+		)
+	)
 
 	# TRAIN
 	model.trainable = True
@@ -115,34 +135,34 @@ def experiment_effnetb6(data_path):
 	j=0
 
 	for x,y in val_ds:
-	for k in x:
-		x_val[j, :,:] = k
-		j+=1
-	for p in y:
-		y_val[i] = p
-		i+=1
+		for k in x:
+			x_val[j, :,:] = k
+			j+=1
+		for p in y:
+			y_val[i] = p
+			i+=1
 
 	y_label = np.empty(VAL_DATA_COUNT, dtype=object)
 	for i in range(len(y_val)):
-	y_label[i] = np.array(y_val[i])
+		y_label[i] = np.array(y_val[i])
 
 	classnames = train_ds.class_names
 	pred = model.predict(x_val, batch_size=64, verbose=1)
 
 	y_true=[]
 	for i in range(len(y_label)):
-	y_true.append(classnames[y_label[i]])
+		y_true.append(classnames[y_label[i]])
 
 	output_class=[]
 	for i in range(len(pred)):
-	output_class.append(classnames[np.argmax(pred[i])])
+		output_class.append(classnames[np.argmax(pred[i])])
 
 	Crct_Counter={'AK':0,'MEL':0,'BCC':0,'NV':0,'BKL':0,'DF':0,'VASC':0,'SCC':0}
 	Total_Counter={'AK':0,'MEL':0,'BCC':0,'NV':0,'BKL':0,'DF':0,'VASC':0,'SCC':0}
 	for i in range(len(pred)):
-	Total_Counter[y_true[i]]+=1
-	if(y_true[i]==output_class[i]):
-		Crct_Counter[y_true[i]]+=1
+		Total_Counter[y_true[i]]+=1
+		if(y_true[i]==output_class[i]):
+			Crct_Counter[y_true[i]]+=1
 
 
 	"""**Accuracies for each class**"""
@@ -159,13 +179,9 @@ def experiment_effnetb6(data_path):
 
 
 	"""**Displaying the classification report**"""
-
-	from sklearn.metrics import classification_report
 	target_names = ['AK', 'BCC', 'BKL', 'DF', 'MEL', 'NV', 'SCC', 'VASC']
 	print(classification_report(y_true, output_class, target_names=target_names))
 
 
 	"""**Displaying the Confusion Matrix**"""
-
-	from sklearn.metrics import confusion_matrix
 	confusion_matrix(y_true, output_class, labels=target_names)

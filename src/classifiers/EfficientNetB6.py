@@ -85,35 +85,44 @@ def experiment_effnetb6(data_path):
 
 	inputs = layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
 	# x = img_augmentation(inputs)  
-	model = EfficientNetB6(include_top=False, input_tensor=inputs, weights="imagenet")
-
+	effb6_model = EfficientNetB6(include_top=False, input_shape=(IMG_HEIGHT, IMG_WIDTH, 3), weights="imagenet")
 	# Freeze the pretrained weights
-	model.trainable = False
+	effb6_model.trainable = False
 
+	x = effb6_model(inputs)
 	# take a tensor and compute the average value of all values across the entire matrix for each of the input channels.
-	x = layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
+	x = layers.GlobalAveragePooling2D(name="avg_pool")(x)
 	x = layers.BatchNormalization()(x)
 
 	top_dropout_rate = 0.2
 	x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
-	outputs = layers.Dense(8, activation="softmax", name="pred")(x)
+	outputs = layers.Dense(8, activation="softmax", name="prediction")(x)
 
 	# Compile
 	model = tf.keras.Model(inputs, outputs, name="EfficientNetB6")
 	optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
 	model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+	# print(model.summary())
+
+	
+
+	print(tfds.as_numpy(data_builder.as_dataset(
+			split='train',
+			shuffle_files=True
+		))
+		)
 
 	# REFINE
 	hist = model.fit(
-		data_builder.as_dataset(
+		tfds.as_numpy(data_builder.as_dataset(
 			split='train',
 			shuffle_files=True
-		), 
+		)), 
 		epochs=EPOCHS_REFINE, 
-		validation_data = data_builder.as_dataset(
+		validation_data = tfds.as_numpy(data_builder.as_dataset(
 			split='validation',
 			shuffle_files=False
-		)
+		))
 	)
 
 	# TRAIN

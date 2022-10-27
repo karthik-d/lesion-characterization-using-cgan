@@ -17,11 +17,8 @@ from sklearn.metrics import confusion_matrix
 
 from .efficientnet.efficientnet.model import EfficientNetB6
 
-# import pathlib
-# root_path = "/content/gdrive/MyDrive/ISIC_DATASETS/ISIC_Datasets/Classification/Segmented_train_120epochs"
-# data_dir = pathlib.Path(root_path)
 
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 IMG_HEIGHT, IMG_WIDTH = (256, 256)
 
 EPOCHS_REFINE = 20
@@ -114,12 +111,12 @@ def experiment_effnetb6(data_path):
 	# 	)
 	# )
 
-	refine_checkpoint = tf.keras.callbacks.ModelCheckpoint(
-		filepath=os.path.join(MODELS_PATH, "{epoch:02d}-{val_loss:.2f}-refine.hdf5"),
-		save_weights_only=True,
-		save_freq='epoch'
-	)
-	hist = model.fit(train_ds, epochs=1, validation_data=val_ds, steps_per_epoch=1, callbacks=[refine_checkpoint])
+	# refine_checkpoint = tf.keras.callbacks.ModelCheckpoint(
+	# 	filepath=os.path.join(MODELS_PATH, "{epoch:02d}-{val_loss:.2f}-refine.hdf5"),
+	# 	save_weights_only=True,
+	# 	save_freq='epoch'
+	# )
+	# hist = model.fit(train_ds, epochs=1, validation_data=val_ds, steps_per_epoch=1, callbacks=[refine_checkpoint])
 
 	# TRAIN
 	model.trainable = True

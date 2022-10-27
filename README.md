@@ -2,7 +2,21 @@
 
 Analysis of Skin Lesion Images to segment out lesion regions, and classify the lesion type using Deep Learning.
 
-## Data Directory
+## Environment Setup
+
+Set up the execution environment using the requirement files.
+- Requirements for setting up **conda environment** are contained in `dep-file-conda.yml`.
+- Requirements for setting up using **pip installations** (not recommended) are in contained in `dep-file-pip.txt`.
+
+## Running Experiments for Classification
+
+The architectures for classifiers are scripted in [`src/classifiers`](./src/classifiers).
+
+- Load the appropriate classifier drive function, say `experiment_effnetb6` in [`src/run.py`](./src/run.py) by importing them.
+- Set up the data location path.
+- Call the driver function in [`src/run.py`](./src/run.py), and execute `python run.py`.
+
+## Data Directory (*for external reference only - not followed in this repository*)
 
 1. Unsegmented Classification
   - Preprocess

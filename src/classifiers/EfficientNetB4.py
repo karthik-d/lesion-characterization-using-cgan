@@ -15,7 +15,7 @@ from keras.models import load_model
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 
-from .efficientnet.efficientnet.model import EfficientNetB6
+from .efficientnet.efficientnet.model import EfficientNetB4
 
 
 BATCH_SIZE = 64
@@ -27,7 +27,7 @@ EPOCHS_TRAIN = 40
 MODELS_PATH = os.path.join(
   os.path.dirname(os.path.abspath(__file__)), 
   'models',
-  'effnet-b6'
+  'effnet-b4'
 ) 
 
 if not os.path.isdir(MODELS_PATH):
@@ -135,7 +135,7 @@ def experiment_effnetb6(data_path):
 
 	VAL_DATA_COUNT = len(val_ds)
 
-	model = load_model(os.path.join(MODELS_PATH, "effnet-b6", "epoch-001.h5"))
+	model = load_model(os.path.join(MODELS_PATH, "epoch-001.h5"))
 
 	y_val = np.zeros(VAL_DATA_COUNT, dtype=object)
 	x_val = np.zeros([VAL_DATA_COUNT, 256, 256, 3])

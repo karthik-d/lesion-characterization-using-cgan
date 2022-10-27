@@ -114,13 +114,24 @@ def experiment_effnetb6(data_path):
 	# 	)
 	# )
 
-	hist = model.fit(train_ds, epochs=1, validation_data=val_ds, steps_per_epoch=1)
+	refine_checkpoint = tf.keras.callbacks.ModelCheckpoint(
+		filepath=os.path.join(MODELS_PATH, "{epoch:02d}-{val_loss:.2f}-refine.hdf5"),
+		save_weights_only=True,
+		save_freq='epoch'
+	)
+	hist = model.fit(train_ds, epochs=1, validation_data=val_ds, steps_per_epoch=1, callbacks=[refine_checkpoint])
 
 	# TRAIN
 	model.trainable = True
 	optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 	model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
-	hist = model.fit(train_ds, epochs=EPOCHS_TRAIN, validation_data=val_ds)
+
+	train_checkpoint = tf.keras.callbacks.ModelCheckpoint(
+		filepath=os.path.join(MODELS_PATH, "{epoch:02d}-{val_loss:.2f}-train.hdf5"),
+		save_weights_only=True,
+		save_freq='epoch'
+	)
+	hist = model.fit(train_ds, epochs=EPOCHS_TRAIN, validation_data=val_ds, callbacks=[train_checkpoint])
 
 
 	"""**Validation and Testing**"""

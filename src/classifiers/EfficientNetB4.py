@@ -37,7 +37,7 @@ if not os.path.isdir(MODELS_PATH):
   )
 
 
-def experiment_effnetb6(data_path):
+def experiment_effnetb4(data_path):
 
 	"""**Splitting the data into training and validation**"""
 

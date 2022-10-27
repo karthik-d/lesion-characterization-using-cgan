@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 import tensorflow as tf
-import tensorflow_datasets as tfds
+# import tensorflow_datasets as tfds
 from tensorflow.keras.layers import Dense,Flatten
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
@@ -42,30 +42,30 @@ def experiment_effnetb6(data_path):
 
 	"""**Splitting the data into training and validation**"""
 
-	data_builder = tfds.folder_dataset.ImageFolder(
+	# data_builder = tfds.folder_dataset.ImageFolder(
+	# 	data_path,
+	# 	shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+	# )
+
+	# # print(train_ds)
+
+	train_ds = tf.keras.utils.image_dataset_from_directory(
 		data_path,
-		shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+		validation_split=0.2,
+		subset="training",
+		seed=123,
+		image_size=(IMG_HEIGHT, IMG_WIDTH),
+		batch_size = BATCH_SIZE 
 	)
 
-	# print(train_ds)
-
-	# train_ds = tf.keras.utils.image_dataset_from_directory(
-	# 	data_path,
-	# 	validation_split=0.2,
-	# 	subset="training",
-	# 	seed=123,
-	# 	image_size=(IMG_HEIGHT, IMG_WIDTH),
-	# 	batch_size = BATCH_SIZE 
-	# )
-
-	# val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-	# 	data_path,
-	# 	validation_split=0.2,
-	# 	subset="validation",
-	# 	seed=123,
-	# 	image_size=(IMG_HEIGHT, IMG_WIDTH),
-	# 	batch_size =BATCH_SIZE 
-	# )
+	val_ds = tf.keras.preprocessing.image_dataset_from_directory(
+		data_path,
+		validation_split=0.2,
+		subset="validation",
+		seed=123,
+		image_size=(IMG_HEIGHT, IMG_WIDTH),
+		batch_size =BATCH_SIZE 
+	)
 
 
 	"""**Training the model**"""
@@ -89,6 +89,7 @@ def experiment_effnetb6(data_path):
         input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
     )
 	# model.summary(line_length=150)
+	model.trainable = False
 
 	flatten = Flatten()
 	dropout = layers.Dropout(0.2, name="top_dropout")
@@ -103,18 +104,20 @@ def experiment_effnetb6(data_path):
 	# print(model.summary())
 
 	# REFINE
-	hist = model.fit(
-		data_builder.as_dataset(
-			split='train',
-			shuffle_files=True,
-			batch_size=BATCH_SIZE
-		), 
-		epochs=EPOCHS_REFINE, 
-		validation_data = data_builder.as_dataset(
-			split='validation',
-			shuffle_files=False
-		)
-	)
+	# hist = model.fit(
+	# 	data_builder.as_dataset(
+	# 		split='train',
+	# 		shuffle_files=True,
+	# 		batch_size=BATCH_SIZE
+	# 	), 
+	# 	epochs=EPOCHS_REFINE, 
+	# 	validation_data = data_builder.as_dataset(
+	# 		split='validation',
+	# 		shuffle_files=False
+	# 	)
+	# )
+
+	hist = model.fit(train_ds, epochs=EPOCHS_REFINE, validation_data=val_ds)
 
 	# TRAIN
 	model.trainable = True

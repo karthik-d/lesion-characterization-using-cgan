@@ -6,8 +6,10 @@ from pathlib import Path
 
 import tensorflow as tf
 # import tensorflow_datasets as tfds
-from tensorflow.keras.layers import Dense,Flatten
-from tensorflow.keras.models import Sequential
+import keras
+from keras import layers
+from keras.layers import Dense, Flatten, Input
+from keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from keras.models import load_model
 from sklearn.metrics import classification_report
@@ -47,8 +49,6 @@ def experiment_effnetb6(data_path):
 	# 	shape=(IMG_HEIGHT, IMG_WIDTH, 3)
 	# )
 
-	# # print(train_ds)
-
 	train_ds = tf.keras.utils.image_dataset_from_directory(
 		data_path,
 		validation_split=0.2,
@@ -71,7 +71,6 @@ def experiment_effnetb6(data_path):
 	"""**Training the model**"""
 
 	from tensorflow.keras.models import Sequential
-	from tensorflow.keras import layers
 
 	# img_augmentation = Sequential(
 	# 	[
@@ -83,24 +82,22 @@ def experiment_effnetb6(data_path):
 	# 	name="img_augmentation",
 	# )
 
-	model = EfficientNetB6(
-        include_top=False,
-        weights='imagenet',
-        input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
-    )
-	# model.summary(line_length=150)
+	# inputs = Input(shape=(256, 256, 3))
+	# x = img_augmentation(inputs)  
+	model = EfficientNetB6(include_top=False, input_shape=(IMG_WIDTH, IMG_HEIGHT, 3), weights="imagenet")
+	# Freeze the pretrained weights
 	model.trainable = False
 
-	flatten = Flatten()
-	dropout = layers.Dropout(0.2, name="top_dropout")
-	new_layer2 = layers.Dense(8, activation='softmax', name='my_dense_2')
+	# take a tensor and compute the average value of all values across the entire matrix for each of the input channels.
+	x = layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
+	x = layers.BatchNormalization()(x)
+	x = layers.Dropout(0.2, name="top_dropout")(x)
+	outputs = layers.Dense(8, activation="softmax", name="pred")(x)
 
-	inp2 = model.input
-	out2 = new_layer2(dropout(flatten(model.output)))
-
-	opt = tf.keras.optimizers.Adam(learning_rate=1e-02)
-	model2 = tf.keras.Model(inp2, out2)
-	model.compile(optimizer=opt, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+	# Compile
+	model = keras.Model(model.input, outputs, name="EfficientNet")
+	optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
+	model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 	# print(model.summary())
 
 	# REFINE
@@ -117,7 +114,7 @@ def experiment_effnetb6(data_path):
 	# 	)
 	# )
 
-	hist = model.fit(train_ds, epochs=EPOCHS_REFINE, validation_data=val_ds)
+	hist = model.fit(train_ds, epochs=1, validation_data=val_ds, steps_per_epoch=1)
 
 	# TRAIN
 	model.trainable = True

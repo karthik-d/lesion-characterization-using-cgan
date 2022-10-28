@@ -38,20 +38,20 @@ The architectures for classifiers are scripted in [`src/classifiers`](./src/clas
      - `Segmentation/train/ISIC2018_Task1-2_Training_Input(input)`: 2594 images
      - `Segmentation/Processed_train`: 2594 images
    - Training Images
-     - `\GAN\train\images`: 2594 images 
+     - `GAN/train/images`: 2594 images 
    - Validation Images
-     - `\GAN\val\images`: 100 images
+     - `GAN/val/images`: 100 images
    - Test           
-     - `\GAN\test\images`: 11720 images
+     - `GAN/test/images`: 11720 images
 
 3. Segmentation using BCD UNet
 
    - Training Images
-     - `\Segmentation`: 14314 images 
+     - `Segmentation`: 14314 images 
    - Validation Images 
-     - `\Segmentation\Data`: 100 images
+     - `Segmentation/Data`: 100 images
    - Test            
-     - `\Classification\training/Processed`: 25331 images
+     - `Classification/training/Processed`: 25331 images
 
 4. Segmented Classification
 

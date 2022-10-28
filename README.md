@@ -6,7 +6,7 @@ Analysis of Skin Lesion Images to segment out lesion regions, and classify the l
 
 Set up the execution environment using the requirement files.
 - Requirements for setting up **conda environment** are contained in `dep-file-conda.yml`.
-- Requirements for setting up using **pip installations** (not recommended) are in contained in `dep-file-pip.txt`.
+- Requirements for setting up using **pip installations** (not recommended) are contained in `dep-file-pip.txt`.
 
 ## Running Experiments for Classification
 

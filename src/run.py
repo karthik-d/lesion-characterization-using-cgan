@@ -19,15 +19,15 @@ BALANCED_SEGMENTED_DATA_PATH = os.path.join(
     'balanced-segmented'
 )
 
-# EfficientNetB3.experiment_effnetb6(
+# EfficientNetB3.experiment_effnetb3(
 #     data_path = BALANCED_SEGMENTED_DATA_PATH
 # )
 
-# EfficientNetB4.experiment_effnetb6(
+# EfficientNetB4.experiment_effnetb4(
 #     data_path = BALANCED_SEGMENTED_DATA_PATH
 # )
 
-# EfficientNetB5.experiment_effnetb6(
+# EfficientNetB5.experiment_effnetb5(
 #     data_path = BALANCED_SEGMENTED_DATA_PATH
 # )
 

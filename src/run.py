@@ -1,6 +1,10 @@
 import os
 
-from classifiers import EfficientNetB6
+from classifiers import (
+    EfficientNetB4,
+    EfficientNetB5,
+    EfficientNetB6,
+)
 
 
 DATA_ROOT = os.path.join(
@@ -14,6 +18,18 @@ BALANCED_SEGMENTED_DATA_PATH = os.path.join(
     DATA_ROOT,
     'balanced-segmented'
 )
+
+# EfficientNetB3.experiment_effnetb6(
+#     data_path = BALANCED_SEGMENTED_DATA_PATH
+# )
+
+# EfficientNetB4.experiment_effnetb6(
+#     data_path = BALANCED_SEGMENTED_DATA_PATH
+# )
+
+# EfficientNetB5.experiment_effnetb6(
+#     data_path = BALANCED_SEGMENTED_DATA_PATH
+# )
 
 EfficientNetB6.experiment_effnetb6(
     data_path = BALANCED_SEGMENTED_DATA_PATH

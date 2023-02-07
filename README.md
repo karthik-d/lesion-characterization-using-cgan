@@ -1,6 +1,6 @@
 # Skin-Lesion-Analysis
 
-Analysis of Skin Lesion Images to segment out lesion regions, and classify the lesion type using Deep Learning.
+Analysis of Skin Lesion Images to segment out lesion regions, and classify the type of lesion using deep learning and algorithmic techniques.
 
 ## Environment Setup
 

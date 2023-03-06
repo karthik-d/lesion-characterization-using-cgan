@@ -16,7 +16,7 @@ The architectures for classifiers are scripted in [`src/classifiers`](./src/clas
 - Set up the data location path.
 - Call the driver function in [`src/run.py`](./src/run.py), and execute `python run.py`.
 
-## Data Directory (*for internal reference only - not followed in this repository*)
+## Data Directory (*for internal reference*)
 
 1. Unsegmented Classification
   - Preprocess

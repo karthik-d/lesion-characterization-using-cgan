@@ -13,10 +13,10 @@ Set up the execution environment using the requirement files.
 The architectures for classifiers are scripted in [`src/classifiers`](./src/classifiers).
 
 - Load the appropriate classifier drive function, say `experiment_effnetb6` in [`src/run.py`](./src/run.py) by importing them.
-- Set up the data location path.
+- Set up the data path.
 - Call the driver function in [`src/run.py`](./src/run.py), and execute `python run.py`.
 
-## Data Directory (*for internal reference*)
+## Data Directory (*for internal reference only*)
 
 1. Unsegmented Classification
   - Preprocess

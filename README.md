@@ -1,4 +1,4 @@
-# Skin-Lesion-Analysis
+# Skin Lesion Characterization using Conditional GANs and EfficientNet.
 
 Analysis of **Skin Lesion Images** to segment out lesion regions and classify the type of lesion using deep learning and image processing techniques.
 

@@ -4,8 +4,14 @@ Analysis of Dermoscopic Skin Lesion Images to segment lesion regions and charact
 
 ## Quick links
 
-- [Manuscript draft [PDF]](./assets/manuscript-draft.pdf).
+- [Published manuscript [PDF]](./assets/manuscript.pdf).
 - [Data directory organization [Markdown]](./datasets/README.md) (internal reference).
+
+# Study design overview
+
+The different choices of data balancing and segmentation approaches used to augment the skin lesion characterization pipeline are presented in the following schematic. 
+
+<img src="./assets/figures/study-pipeline/study-pipeline-with-caption.png" width="600" />
 
 ## Environment setup
 

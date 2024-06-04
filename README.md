@@ -8,6 +8,23 @@ Analysis of Dermoscopic Skin Lesion Images to segment lesion regions and charact
 - [Published manuscript [PDF]](./assets/manuscript.pdf).
 - [Data directory organization [Markdown]](./datasets/README.md) (internal reference).
 
+## Cite Us
+
+[Link to the Research Paper](https://doi.org/10.1007/s00521-024-09964-9).
+
+If you find our work useful in your research, please cite us:
+
+```
+@article{kd2024conditional,
+  title={Conditional adversarial segmentation and deep learning approach for skin lesion sub-typing from dermoscopic images},
+  author={Mirunalini, P and Desingu, Karthik and Aswatha, S and Deepika, R and Deepika, V and Jaisakthi, SM},
+  journal={Neural Computing and Applications},
+  pages={1--19},
+  year={2024},
+  publisher={Springer}
+}
+```
+
 ## Study design overview
 
 The different choices of data balancing and segmentation approaches used to augment the skin lesion characterization pipeline are presented in the following schematic. 
